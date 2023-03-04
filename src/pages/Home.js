@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ProjectDetals from "../componets/ProjectDetals";
+import ProjectFrom from "../componets/ProjectFrom";
 
 const Home = () => {
   const [projects, setProjects] = useState([]);
@@ -15,7 +16,6 @@ const Home = () => {
         if (!res.ok) throw new Error("Something went wrong");
         const data = await res.json();
         setProjects(data);
-        console.log(data);
         setLoading(false);
       } catch (err) {
         setError(err.meassage);
@@ -36,7 +36,7 @@ const Home = () => {
             ))}
         </div>
       </div>
-      <div className="right "></div>
+      <ProjectFrom />
     </div>
   );
 };
