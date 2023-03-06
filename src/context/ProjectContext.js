@@ -6,7 +6,7 @@ const initialState = {
 
 export const projectReducer = (state, action) => {
   switch (action.type) {
-    case "GET_PROJECTs":
+    case "SET_PROJECTS":
       return {
         projects: action.payload,
       };
