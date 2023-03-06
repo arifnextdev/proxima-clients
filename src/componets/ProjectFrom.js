@@ -9,6 +9,7 @@ const ProjectFrom = () => {
   const [manager, setManager] = useState("");
   const [dev, setDev] = useState("");
   const [error, setError] = useState(null);
+  const [emptyFields, setEmptyFields] = useState([]);
 
   const { dispatch } = useProjectsContext();
 
@@ -31,6 +32,8 @@ const ProjectFrom = () => {
     //!res.ok, set error
     if (!res.ok) {
       setError(json.error);
+      const emty = setEmptyFields(json.emptyFields);
+      console.log(emty);
     }
     //res.ok,reset
     if (res.ok) {
@@ -40,7 +43,8 @@ const ProjectFrom = () => {
       setDuration("");
       setManager("");
       setDev("");
-      setError("");
+      setError(null);
+      setEmptyFields([]);
       dispatch({ type: "CREATE_PROJECT", payload: json });
     }
   };
@@ -64,7 +68,11 @@ const ProjectFrom = () => {
           type="text"
           placeholder="e.g e-commerce wevsite"
           id="title"
-          className="bg-transparent border border-slate-500 py-3 px-5 rounded-lg outline-none focus:border-sky-400"
+          className={`bg-transparent border  py-3 px-5 rounded-lg outline-none focus:border-sky-400 duration-300 ${
+            emptyFields?.includes("title")
+              ? "border-rose-500"
+              : "border-slate-500"
+          }`}
         />
       </div>
       <div className="from-control flex flex-col gap-2 ">
@@ -80,7 +88,11 @@ const ProjectFrom = () => {
           type="text"
           placeholder="e.g.e node.js react.js"
           id="tech"
-          className="bg-transparent border border-slate-500 py-3 px-5 rounded-lg outline-none focus:border-sky-400"
+          className={`bg-transparent border  py-3 px-5 rounded-lg outline-none focus:border-sky-400 duration-300 ${
+            emptyFields?.includes("tech")
+              ? "border-rose-500"
+              : "border-slate-500"
+          }`}
         />
       </div>
       <div className="from-control flex flex-col gap-2 ">
@@ -96,7 +108,11 @@ const ProjectFrom = () => {
           type="number"
           placeholder="e.g. 500"
           id="budget"
-          className="bg-transparent border border-slate-500 py-3 px-5 rounded-lg outline-none focus:border-sky-400"
+          className={`bg-transparent border  py-3 px-5 rounded-lg outline-none focus:border-sky-400 duration-300 ${
+            emptyFields?.includes("budget")
+              ? "border-rose-500"
+              : "border-slate-500"
+          }`}
         />
       </div>
       <div className="from-control flex flex-col gap-2 ">
@@ -112,7 +128,11 @@ const ProjectFrom = () => {
           type="number"
           placeholder="e.g. 4 weeks"
           id="duration"
-          className="bg-transparent border border-slate-500 py-3 px-5 rounded-lg outline-none focus:border-sky-400"
+          className={`bg-transparent border  py-3 px-5 rounded-lg outline-none focus:border-sky-400 duration-300 ${
+            emptyFields?.includes("duration")
+              ? "border-rose-500"
+              : "border-slate-500"
+          }`}
         />
       </div>
       <div className="from-control flex flex-col gap-2 ">
@@ -128,7 +148,11 @@ const ProjectFrom = () => {
           type="text"
           placeholder="e.g. Ariful"
           id="manager"
-          className="bg-transparent border border-slate-500 py-3 px-5 rounded-lg outline-none focus:border-sky-400"
+          className={`bg-transparent border  py-3 px-5 rounded-lg outline-none focus:border-sky-400 duration-300 ${
+            emptyFields?.includes("manager")
+              ? "border-rose-500"
+              : "border-slate-500"
+          }`}
         />
       </div>
       <div className="from-control flex flex-col gap-2 ">
@@ -144,7 +168,11 @@ const ProjectFrom = () => {
           type="number"
           placeholder="e.g. 6"
           id="dev"
-          className="bg-transparent border border-slate-500 py-3 px-5 rounded-lg outline-none focus:border-sky-400"
+          className={`bg-transparent border  py-3 px-5 rounded-lg outline-none focus:border-sky-400 duration-300 ${
+            emptyFields?.includes("dev")
+              ? "border-rose-500"
+              : "border-slate-500"
+          }`}
         />
       </div>
 
