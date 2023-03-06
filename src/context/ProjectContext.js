@@ -1,7 +1,7 @@
 import { createContext, useReducer, useState } from "react";
 
 const initialState = {
-  project: null,
+  project: [],
 };
 
 export const projectReducer = (state, action) => {
@@ -20,6 +20,19 @@ export const projectReducer = (state, action) => {
         projects: state.projects.filter(
           (project) => project._id !== action.payload._id
         ),
+      };
+    case "UPDATE_PROJECT":
+      const [existingProject] = state.projects.filter(
+        (project) => project._id === action.payload._id
+      );
+      return {
+        ...state,
+        projects: [
+          action.payload,
+          ...state.projects.filter(
+            (project) => project._id !== existingProject._id
+          ),
+        ],
       };
     default:
       return state;

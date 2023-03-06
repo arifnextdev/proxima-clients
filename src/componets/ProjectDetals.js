@@ -1,9 +1,14 @@
 import { currencyFormatter } from "../utils/currencyFormatter";
 import { useProjectsContext } from "../hooks/useProjectContext";
 import moment from "moment";
+import { useState } from "react";
+import ProjectFrom from "./ProjectFrom";
 
 const ProjectDetals = ({ project }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
   const { dispatch } = useProjectsContext();
+
   const handleDelete = async () => {
     const res = await fetch(
       `http://localhost:5000/api/projects/${project._id}`,
@@ -15,6 +20,16 @@ const ProjectDetals = ({ project }) => {
     if (res.ok) {
       dispatch({ type: "DELETE_PROJECT", payload: json });
     }
+  };
+
+  const handleUpdate = () => {
+    setIsModalOpen(true);
+    setIsOverlayOpen(true);
+  };
+
+  const handleOverlay = () => {
+    setIsModalOpen(false);
+    setIsOverlayOpen(false);
   };
 
   return (
@@ -46,7 +61,10 @@ const ProjectDetals = ({ project }) => {
         </div>
       </div>
       <div className="bottom flex gap-5">
-        <button className="bg-sky-400 text-slate-900 py-2 px-5 rounded shadow-xl hover:bg-sky-50 duration-300">
+        <button
+          className="bg-sky-400 text-slate-900 py-2 px-5 rounded shadow-xl hover:bg-sky-50 duration-300"
+          onClick={handleUpdate}
+        >
           Update
         </button>
         <button
@@ -55,6 +73,29 @@ const ProjectDetals = ({ project }) => {
         >
           Delete
         </button>
+      </div>
+      {/* OVERLay  */}
+      <div
+        onClick={handleOverlay}
+        className={`overlay fixed z-[1] h-screen w-screen bg-slate-900/50 top-0 left-0 right-0 bottom-0 ${
+          isOverlayOpen ? "" : "hidden"
+        }`}
+      ></div>
+
+      {/* MODAL  */}
+      <div
+        className={`update-modal w-[35rem] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-800 p-10 rounded-xl shadow-xl border border-slate-700 z-[2] ${
+          isModalOpen ? "" : "hidden"
+        }`}
+      >
+        <h2 className="text-4xl font-medium text-sky-400 mb-10">
+          Update Project
+        </h2>
+        <ProjectFrom
+          project={project}
+          setIsModalOpen={setIsModalOpen}
+          setIsOverlayOpen={setIsOverlayOpen}
+        />
       </div>
     </div>
   );

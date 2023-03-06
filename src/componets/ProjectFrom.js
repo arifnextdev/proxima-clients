@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useProjectsContext } from "../hooks/useProjectContext";
 
-const ProjectFrom = () => {
-  const [title, setTitle] = useState("");
-  const [tech, setTech] = useState("");
-  const [budget, setBudget] = useState("");
-  const [duration, setDuration] = useState("");
-  const [manager, setManager] = useState("");
-  const [dev, setDev] = useState("");
+const ProjectFrom = ({ project, setIsModalOpen, setIsOverlayOpen }) => {
+  const [title, setTitle] = useState(project ? project.title : "");
+  const [tech, setTech] = useState(project ? project.tech : "");
+  const [budget, setBudget] = useState(project ? project.budget : "");
+  const [duration, setDuration] = useState(project ? project.duration : "");
+  const [manager, setManager] = useState(project ? project.manager : "");
+  const [dev, setDev] = useState(project ? project.dev : "");
   const [error, setError] = useState(null);
   const [emptyFields, setEmptyFields] = useState([]);
 
@@ -18,40 +18,84 @@ const ProjectFrom = () => {
 
     //data
     const projectObj = { title, tech, budget, duration, manager, dev };
-    //post req
-    const res = await fetch("http://localhost:5000/api/projects", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(projectObj),
-    });
+    //if there is no project, send post req
+    if (!project) {
+      //post req
+      const res = await fetch("http://localhost:5000/api/projects", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(projectObj),
+      });
 
-    const json = await res.json();
+      const json = await res.json();
 
-    //!res.ok, set error
-    if (!res.ok) {
-      setError(json.error);
-      const emty = setEmptyFields(json.emptyFields);
-      console.log(emty);
+      //!res.ok, set error
+      if (!res.ok) {
+        setError(json.error);
+        const emty = setEmptyFields(json.emptyFields);
+        console.log(emty);
+      }
+      //res.ok,reset
+      if (res.ok) {
+        setTitle("");
+        setTech("");
+        setBudget("");
+        setDuration("");
+        setManager("");
+        setDev("");
+        setError(null);
+        setEmptyFields([]);
+        dispatch({ type: "CREATE_PROJECT", payload: json });
+      }
+      return;
     }
-    //res.ok,reset
-    if (res.ok) {
-      setTitle("");
-      setTech("");
-      setBudget("");
-      setDuration("");
-      setManager("");
-      setDev("");
-      setError(null);
-      setEmptyFields([]);
-      dispatch({ type: "CREATE_PROJECT", payload: json });
+    //if there is project , send patch req
+    if (project) {
+      //send patch req
+      const res = await fetch(
+        `http://localhost:5000/api/projects/${project._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(projectObj),
+        }
+      );
+
+      const json = await res.json();
+
+      //!res.ok
+      if (!res.ok) {
+        setError(json.error);
+        setEmptyFields(json.emptyFields);
+      }
+
+      //res.ok
+      if (res.ok) {
+        setError(null);
+        setEmptyFields([]);
+
+        //dispatch
+        dispatch({ type: "UPDATE_PROJECT", payload: json });
+
+        //close overlay and modal
+        setIsModalOpen(false);
+        setIsOverlayOpen(false);
+      }
+      return;
     }
   };
 
   return (
     <form className="project-from flex flex-col gap-5" onSubmit={handleSubmit}>
-      <h2 className="text-4xl font-medium text-sky-400 mb-10">
+      <h2
+        className={`text-4xl font-medium text-sky-400 mb-10 ${
+          project ? "hidden" : ""
+        }`}
+      >
         Add a New Project
       </h2>
 
@@ -178,9 +222,10 @@ const ProjectFrom = () => {
 
       <button
         type="submit"
-        className="bg-sky-400 text-slate-900 py-3 rounded-lg hover:bg-sky-50 duration-300"
+        className={`bg-sky-400 text-slate-900 py-3 rounded-lg hover:bg-sky-50 duration-300 
+        }`}
       >
-        Add Project
+        {project ? "Congirm Update" : "Add Project"}
       </button>
       {error && (
         <p className="bg-rose-500/20 rounded-lg p-5 text-rose-500 border border-rose-500">
