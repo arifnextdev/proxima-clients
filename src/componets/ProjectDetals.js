@@ -3,17 +3,25 @@ import { useProjectsContext } from "../hooks/useProjectContext";
 import moment from "moment";
 import { useState } from "react";
 import ProjectFrom from "./ProjectFrom";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const ProjectDetals = ({ project }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
   const { dispatch } = useProjectsContext();
+  const { user } = useAuthContext();
 
   const handleDelete = async () => {
+    if (!user) {
+      return;
+    }
     const res = await fetch(
       `http://localhost:5000/api/projects/${project._id}`,
       {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
       }
     );
     const json = await res.json();
