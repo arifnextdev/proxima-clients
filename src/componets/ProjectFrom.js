@@ -45,7 +45,7 @@ const ProjectFrom = ({ project, setIsModalOpen, setIsOverlayOpen }) => {
       //!res.ok, set error
       if (!res.ok) {
         setError(json.error);
-        const emty = setEmptyFields(json.emptyFields);
+        setEmptyFields(json.emptyFields);
       }
       //res.ok,reset
       if (res.ok) {
