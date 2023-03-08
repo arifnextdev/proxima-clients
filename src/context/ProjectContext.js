@@ -1,7 +1,7 @@
-import { createContext, useReducer, useState } from "react";
+import { createContext, useReducer } from "react";
 
 const initialState = {
-  project: [],
+  projects: [],
 };
 
 export const projectReducer = (state, action) => {

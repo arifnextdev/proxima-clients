@@ -8,7 +8,7 @@ export const useLogout = () => {
     localStorage.removeItem("user");
     //dispatch
     logoutDispatch({ type: "LOGOUT" });
-    projectsDispatch({ type: "SET_PROJECT", payload: [] });
+    projectsDispatch({ type: "SET_PROJECTS", payload: [] });
   };
   return { logout };
 };
